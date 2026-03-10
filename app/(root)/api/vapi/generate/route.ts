@@ -19,6 +19,14 @@ export async function POST(request: Request) {
             );
         }
 
+        const amountNum = Number(amount);
+        if (!Number.isFinite(amountNum) || amountNum < 1 || amountNum > 20) {
+          return Response.json(
+            { success: false, error: "amount must be a number between 1 and 20" },
+            { status: 400 }
+          );
+        }
+
         const techstackArr = String(techstack)
             .split(",")
             .map(s => s.trim())
