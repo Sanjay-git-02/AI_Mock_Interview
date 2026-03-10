@@ -96,12 +96,10 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
         if(type === 'generate'){
             console.log("TYPE", type);
             await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,{
-                 assistantOverrides: { 
                      variableValues: { 
                          userid: userId, 
                          username:  userName?.trim() ? userName?.trim() : "there" 
                      } 
-                 }
             })
             console.log(userId)
         }else{
@@ -114,9 +112,7 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
             }
 
              await vapi.start(interviewer, {
-                  assistantOverrides: {
                     variableValues: { questions: formattedQuestions }
-                  }
             });
         }
     }
