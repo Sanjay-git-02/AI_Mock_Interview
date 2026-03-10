@@ -95,10 +95,12 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
         setCallStatus(CallStatus.CONNECTING)
         if(type === 'generate'){
             await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,{
-                variableValues: {
-                    username: userName?.trim() ? userName?.trim() : "there",
-                    userid: userId,
-                }
+                 assistantOverrides: { 
+                     variableValues: { 
+                         userid: userId, 
+                         username:  userName?.trim() ? userName?.trim() : "there" 
+                     } 
+                 }
             })
             console.log(userId)
         }else{
