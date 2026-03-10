@@ -12,11 +12,15 @@ export async function POST(request: Request) {
     const {type, role, level, techstack, amount, userid} = await request.json();
 
     try {
-        if (!type || !role || !level || !techstack || !amount || !userid) {
-            return Response.json(
-                {success: false, error: "Missing required fields"},
-                {status: 400}
-            );
+         if (!type || !role || !level || !techstack || !amount || !userid) {
+              return Response.json(
+                {
+                  results: [
+                    { toolCallId, result: { success: false, error: "Missing required fields" } },
+                  ],
+                },
+                { status: 200 }
+              );
         }
 
         const amountNum = Number(amount);
@@ -67,22 +71,19 @@ export async function POST(request: Request) {
         const docRef = await db.collection("interviews").add(interview);
 
         return Response.json(
-            {
-                success: true,
-                interviewId: docRef.id,
-                questions: object.questions,
-                interview: {
-                    role,
-                    type,
-                    level,
-                    techstack: techstackArr,
-                    userId: userid,
-                    finalized: true,
-                    coverImage: interview.coverImage,
-                    createdAt: interview.createdAt,
+          {
+            results: [
+              {
+                toolCallId,
+                result: {
+                  success: true,
+                  interviewId: docRef.id,
+                  questions: object.questions,
                 },
-            },
-            { status: 200 }
+              },
+            ],
+          },
+          { status: 200 }
         );
 
     } catch (error) {
