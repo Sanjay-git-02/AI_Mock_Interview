@@ -102,6 +102,7 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
                      } 
                  }
             })
+            console.log("Vapi start id:", process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID);
             console.log(userId)
         }else{
             let formattedQuestions = '';
