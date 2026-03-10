@@ -94,6 +94,8 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
     const handleCall = async () => {
         setCallStatus(CallStatus.CONNECTING)
         if(type === 'generate'){
+            console.log("TYPE", type);
+            console.log("STARTING WORKFLOW ID", "c25acb30-11e6-4374-ae88-d185dce22194");
             await vapi.start("c25acb30-11e6-4374-ae88-d185dce22194",{
                  workflowOverrides: { 
                      variableValues: { 
@@ -102,7 +104,6 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
                      } 
                  }
             })
-            console.log("Vapi start id:", process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID);
             console.log(userId)
         }else{
             let formattedQuestions = '';
@@ -113,13 +114,12 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
                     .join('\n');
             }
 
-            await vapi.start(interviewer,{
-                variableValues:{
-                    questions:formattedQuestions
-                }
-            })
+             await vapi.start(interviewer, {
+                  assistantOverrides: {
+                    variableValues: { questions: formattedQuestions }
+                  }
+            });
         }
-
     }
 
     const handleDisconnect = async () => {
