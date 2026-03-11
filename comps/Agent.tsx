@@ -22,7 +22,7 @@ interface SavedMessage{
 }
 
 
-const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
+const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentProps) => {
     const router = useRouter();
     const [isSpeaking,setIsSpeaking] = useState(false);
     const [callStatus,setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE)
@@ -66,7 +66,6 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
     const handleGenerateFeedback = async(messages:SavedMessage[])=>{
         console.log('Generate feedback here');
 
-        //ToDo
         const {success,feedbackId:id} = await createFeedback({
             userId:userId!,
             interviewId:interviewId!,
@@ -171,7 +170,7 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
                         <span
                             className={cn("absolute animate-ping rounded-full opacity-75", callStatus !== 'CONNECTING' && "hidden")}/>
                         <span>
-                            {isCallInactiveOrFinished ? "Call" : "..."}
+                            {isCallInactiveOrFinished ? "Call" : "Connecting..."}
                         </span>
 
                     </button>
