@@ -76,6 +76,8 @@ export async function getFeedbackByInterviewId(
 ): Promise<Feedback | null> {
   const { interviewId, userId } = params;
 
+  if (!interviewId || !userId) return null;
+
   const querySnapshot = await db
     .collection("feedback")
     .where("interviewId", "==", interviewId)
@@ -111,6 +113,7 @@ export async function getLatestInterviews(
 export async function getInterviewsByUserId(
   userId: string
 ): Promise<Interview[] | null> {
+  if (!userId) return [];
   const interviews = await db
     .collection("interviews")
     .where("userId", "==", userId)
