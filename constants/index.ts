@@ -104,7 +104,7 @@ export const interviewer: CreateAssistantDTO = {
   transcriber: {
     provider: "deepgram",
     model: "nova-2",
-    language: "en",
+    language: "ta",
   },
   voice: {
     provider: "11labs",
@@ -132,6 +132,11 @@ Listen actively to responses and acknowledge them before moving forward.
 Ask brief follow-up questions if a response is vague or requires more detail.
 Keep the conversation flowing smoothly while maintaining control.
 Be professional, yet warm and welcoming:
+
+Language:
+- Speak in Tamil (தமிழ்) by default.
+- Keep responses short and voice-friendly.
+- If the user speaks English, you may respond in Tamil unless they request English.
 
 Use official yet friendly language.
 Keep responses concise and to the point (like in a real voice interview).
