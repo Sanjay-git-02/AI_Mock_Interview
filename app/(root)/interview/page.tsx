@@ -5,6 +5,10 @@ import {getCurrentUser} from "@/lib/actions/auth.action";
 const Page = async() => {
     const user = await getCurrentUser();
 
+    if (!user) {
+    return <div>User not authenticated</div>;
+  }
+
     return (
         <>
             <h3>Interview Generation</h3>
