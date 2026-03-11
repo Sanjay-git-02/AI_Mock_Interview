@@ -106,9 +106,7 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
             let formattedQuestions = '';
 
             if(questions){
-                formattedQuestions = questions
-                    .map((question)=> `-${question}`)
-                    .join('\n');
+                formattedQuestions = questions.map((question)=> `-${question}`).join('\n');
             }
 
              await vapi.start(interviewer, {
