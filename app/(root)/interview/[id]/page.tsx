@@ -7,7 +7,7 @@ import { getCurrentUser } from "@/lib/actions/auth.action";
 import TechIcons from "@/comps/TechIcons";
 
 const Page = async ({ params }: RouteParams) => {
-  const { id } = params;
+  const { id } = await params;
 
   const user = await getCurrentUser();
 
