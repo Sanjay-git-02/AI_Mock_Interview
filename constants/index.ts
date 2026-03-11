@@ -102,9 +102,8 @@ export const interviewer: CreateAssistantDTO = {
   firstMessage:
     "Hello! Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience.",
   transcriber: {
-    provider: "deepgram",
-    model: "nova-2",
-    language: "ta",
+    provider: "azure",
+    language: "ta-IN",
   },
   voice: {
     provider: "azure",
