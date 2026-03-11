@@ -9,7 +9,12 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-    const {type, role, level, techstack, amount, userid} = await request.json();
+    const body = await request.json();
+    const toolCall = body?.message?.toolCallList?.[0];
+    const toolCallId = toolCall?.id;
+    const args = JSON.parse(toolCall.function.arguments);
+    
+    const { type, role, level, techstack, amount, userid } = args;
 
     try {
          if (!type || !role || !level || !techstack || !amount || !userid) {
