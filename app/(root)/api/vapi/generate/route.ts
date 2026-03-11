@@ -9,89 +9,104 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-    const body = await request.json();
-    const toolCall = body?.message?.toolCallList?.[0];
-    const toolCallId = toolCall?.id;
-    const args = JSON.parse(toolCall.function.arguments);
-    
-    const { type, role, level, techstack, amount, userid } = args;
+  const body = await request.json();
 
-    try {
-         if (!type || !role || !level || !techstack || !amount || !userid) {
-              return Response.json(
-                {
-                  results: [
-                    { toolCallId, result: { success: false, error: "Missing required fields" } },
-                  ],
-                },
-                { status: 200 }
-              );
-        }
+  const toolCall = body?.message?.toolCallList?.[0];
+  if (!toolCall?.id || !toolCall?.function?.arguments) {
+    return Response.json(
+      { results: [{ toolCallId: toolCall?.id ?? "unknown", result: { success: false, error: "Invalid tool payload" } }] },
+      { status: 200 }
+    );
+  }
 
-        const amountNum = Number(amount);
-        if (!Number.isFinite(amountNum) || amountNum < 1 || amountNum > 20) {
-          return Response.json(
-            { success: false, error: "amount must be a number between 1 and 20" },
-            { status: 400 }
-          );
-        }
+  const toolCallId = toolCall.id;
 
-        const techstackArr = String(techstack)
-            .split(",")
-            .map(s => s.trim())
-            .filter(Boolean);
+  let args: any = {};
+  try {
+    args =
+      typeof toolCall.function.arguments === "string"
+        ? JSON.parse(toolCall.function.arguments)
+        : toolCall.function.arguments;
+  } catch {
+    return Response.json(
+      { results: [{ toolCallId, result: { success: false, error: "Arguments JSON parse failed" } }] },
+      { status: 200 }
+    );
+  }
 
-        const {object} = await generateObject({
-            model: google('gemini-3-flash-preview'),
-            schema: z.object({
-                questions: z.array(z.string().min(1)).min(1),
-            }),
-            prompt: `
-            Prepare questions for a job interview.
-            The job role is ${role}.
-            The job experience level is ${level}.
-            The tech stack used in the job is: ${techstackArr.join(", ")}.
-            The focus between behavioural and technical questions should lean towards: ${type}.
-            The amount of questions required is: ${amount}.
-            The questions are going to be read by a voice assistant so do not use "/" or "*" or any other special characters which might break the voice assistant.
-            Return JSON that matches this schema:
-            {"questions":["Question 1","Question 2","Question 3"]}
-        
-            Thank you! <3
-            `
-        })
+  const { type, role, level, techstack, amount, userid } = args;
 
-        const interview = {
-            role: role,
-            type: type,
-            level: level,
-            techstack: techstackArr,
-            questions: object.questions,
-            userId: userid,
-            finalized: true,
-            coverImage: getRandomInterviewCover(),
-            createdAt: new Date().toISOString(),
-        };
-
-        const docRef = await db.collection("interviews").add(interview);
-
-        return Response.json(
-          {
-            results: [
-              {
-                toolCallId,
-                result: {
-                  success: true,
-                  interviewId: docRef.id,
-                  questions: object.questions,
-                },
-              },
-            ],
-          },
-          { status: 200 }
-        );
-
-    } catch (error) {
-        return Response.json({success: false,error:error},{status:500});
+  try {
+    if (!type || !role || !level || !techstack || !amount || !userid) {
+      return Response.json(
+        { results: [{ toolCallId, result: { success: false, error: "Missing required fields" } }] },
+        { status: 200 }
+      );
     }
+
+    const techstackArr = String(techstack)
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const { object } = await generateObject({
+      model: google("gemini-3-flash-preview"),
+      schema: z.object({
+        questions: z.array(z.string().min(1)).min(1),
+      }),
+      prompt: `
+        Prepare questions for a job interview.
+        The job role is ${role}.
+        The job experience level is ${level}.
+        The tech stack used in the job is: ${techstackArr.join(", ")}.
+        The focus between behavioural and technical questions should lean towards: ${type}.
+        The amount of questions required is: ${amount}.
+        The questions are going to be read by a voice assistant so do not use "/" or "*" or any other special characters which might break the voice assistant.
+        Return JSON that matches this schema:
+        {"questions":["Question 1","Question 2","Question 3"]}
+        `,
+            });
+
+    const interview = {
+      role,
+      type,
+      level,
+      techstack: techstackArr,
+      questions: object.questions,
+      userId: userid,
+      finalized: true,
+      coverImage: getRandomInterviewCover(),
+      createdAt: new Date().toISOString(),
+    };
+
+    const docRef = await db.collection("interviews").add(interview);
+
+    return Response.json(
+      {
+        results: [
+          {
+            toolCallId,
+            result: {
+              success: true,
+              interviewId: docRef.id,
+              questions: object.questions,
+            },
+          },
+        ],
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return Response.json(
+      {
+        results: [
+          {
+            toolCallId,
+            result: { success: false, error: error?.message ?? "Server error" },
+          },
+        ],
+      },
+      { status: 200 }
+    );
+  }
 }
