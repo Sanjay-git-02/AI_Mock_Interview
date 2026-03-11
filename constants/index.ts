@@ -107,8 +107,8 @@ export const interviewer: CreateAssistantDTO = {
     language: "ta",
   },
   voice: {
-    provider: "11labs",
-    voiceId: "gCr8TeSJgJaeaIoV4RWH",
+    provider: "azure",
+    voiceId: "ta-IN-PallaviNeural",
     stability: 0.4,
     similarityBoost: 0.8,
     speed: 0.9,
