@@ -100,7 +100,7 @@ export const mappings = {
 export const interviewer: CreateAssistantDTO = {
   name: "Interviewer",
   firstMessage:
-    "Hello! Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience.",
+    "வணக்கம்! இன்று பேச நேரம் எடுத்துக்கொண்டதற்கு நன்றி. உங்கள் அனுபவம் பற்றி மேலும் அறிய விரும்புகிறேன்.",
   transcriber: {
     provider: "azure",
     language: "ta-IN",
@@ -108,11 +108,7 @@ export const interviewer: CreateAssistantDTO = {
   voice: {
     provider: "azure",
     voiceId: "ta-IN-PallaviNeural",
-    stability: 0.4,
-    similarityBoost: 0.8,
     speed: 0.9,
-    style: 0.5,
-    useSpeakerBoost: true,
   },
   model: {
     provider: "openai",
