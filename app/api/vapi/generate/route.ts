@@ -68,14 +68,14 @@ export async function POST(request: Request) {
             });
 
     const interview = {
-      role: role ?? "",
-      type: type ?? "",
-      level: level ?? "",
-      techstack: techstackArr ?? [],
-      questions: object?.questions ?? [],
-      userId: userid ?? "",
+      role: role ,
+      type: type ,
+      level: level,
+      techstack: techstackArr ,
+      questions: object?.questions,
+      userId: userid ,
       finalized: true,
-      coverImage: getRandomInterviewCover() ?? "",
+      coverImage: getRandomInterviewCover(),
       createdAt: new Date().toISOString(),
     };
 
