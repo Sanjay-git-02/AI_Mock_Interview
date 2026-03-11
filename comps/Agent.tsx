@@ -105,7 +105,7 @@ const Agent = ({userName,userId,type,interviewId,questions}: AgentProps) => {
         }else{
             let formattedQuestions = '';
 
-            if(messages){
+            if(questions){
                 formattedQuestions = questions
                     .map((question)=> `-${question}`)
                     .join('\n');
