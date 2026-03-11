@@ -12,7 +12,11 @@ const Page = async ({params}:RouteParams) => {
     const user = await getCurrentUser();
     const interview = await getInterviewById(id);
 
-    if(!interview) redirect("/")
+    if(!interview) redirect("/") 
+    const feedback = await getFeedbackByInterviewId({
+    interviewId: id,
+    userId: user?.id!,
+  });
 
     return (
         <>
@@ -24,7 +28,7 @@ const Page = async ({params}:RouteParams) => {
                     </div>
                     <TechIcons techStack={interview.techstack}/>
                 </div>
-                <p className="rounded-lg bg-black-200 px-4 py-2 h-fit capitalize">
+                <p className="rounded-lg bg-dark-200 px-4 py-2 h-fit capitalize">
                     {interview.type}
                 </p>
             </div>
@@ -35,6 +39,8 @@ const Page = async ({params}:RouteParams) => {
                 interviewId={id}
                 type="interview"
                 questions={interview.questions}
+                feedbackId={feedback?.id}
+            />
         </>
     )
 }
