@@ -38,12 +38,7 @@ const Page = async() => {
                        userInterviews?.map((interview)=>(
                            <InterviewCard 
                                 key={interview.id}
-                                userId={user?.id}
-                                interviewId={interview.id}
-                                role={interview.role}
-                                type={interview.type}
-                                techstack={interview.techstack}
-                                createdAt={interview.createdAt}
+                                {...interview}
                             />
                        ))
                        ):(
@@ -60,12 +55,7 @@ const Page = async() => {
                        latestInterviews?.map((interview)=>(
                            <InterviewCard 
                                 key={interview.id}
-                                userId={user?.id}
-                                interviewId={interview.id}
-                                role={interview.role}
-                                type={interview.type}
-                                techstack={interview.techstack}
-                                createdAt={interview.createdAt}
+                                {...interview}
                             />
                        ))
                    ):(
