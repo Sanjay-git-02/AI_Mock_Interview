@@ -2,7 +2,6 @@ import React from 'react'
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import {dummyInterviews} from "@/constants";
 import InterviewCard from "@/comps/InterviewCard";
 import {getCurrentUser} from "@/lib/actions/auth.action";
 import {getInterviewsByUserId, getLatestInterviews} from "@/lib/actions/general.action"
@@ -36,15 +35,21 @@ const Page = async() => {
                <h2>Your Interviews</h2>
                <div className="interviews-section">
                    {hasPastInterviews ? (
-                       userInterviews?.map((interview,index)=>(
-                           <InterviewCard key={index} {...interview}/>
+                       userInterviews?.map((interview)=>(
+                           <InterviewCard 
+                                key={interview.id}
+                                userId={user?.id}
+                                interviewId={interview.id}
+                                role={interview.role}
+                                type={interview.type}
+                                techstack={interview.techstack}
+                                createdAt={interview.createdAt}
+                            />
                        ))
                        ):(
                        <p>You have&apos;t taken any interviews yet</p>
                    )}
-                   {/*{dummyInterviews.map((interview,index)=>(*/}
-                   {/*    <InterviewCard key={index} {...interview}/>*/}
-                   {/*))}*/}
+                
 
                </div>
            </section>
@@ -52,8 +57,16 @@ const Page = async() => {
                <h2>Take an Interview</h2>
                <div className="interviews-section">
                    {hasUpcomingInterviews ? (
-                       latestInterviews?.map((interview,index)=>(
-                           <InterviewCard key={index} {...interview}/>
+                       latestInterviews?.map((interview)=>(
+                           <InterviewCard 
+                                key={interview.id}
+                                userId={user?.id}
+                                interviewId={interview.id}
+                                role={interview.role}
+                                type={interview.type}
+                                techstack={interview.techstack}
+                                createdAt={interview.createdAt}
+                            />
                        ))
                    ):(
                        <p>There are no new interviews available.</p>
