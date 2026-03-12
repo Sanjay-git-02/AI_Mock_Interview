@@ -69,7 +69,8 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
         const {success,feedbackId:id} = await createFeedback({
             userId:userId!,
             interviewId:interviewId!,
-            transcript:messages
+            transcript:messages,
+            feedbackId,
         });
 
         if(success && id){
@@ -88,7 +89,7 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
                 handleGenerateFeedback(messages);
             }
         }
-    }, [messages,callStatus,type,userId]);
+    }, [messages, callStatus, feedbackId, interviewId, router, type, userId]);
 
     const handleCall = async () => {
         setCallStatus(CallStatus.CONNECTING)
