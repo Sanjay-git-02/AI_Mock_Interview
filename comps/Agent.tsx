@@ -26,7 +26,7 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
     const router = useRouter();
     const [isSpeaking,setIsSpeaking] = useState(false);
     const [callStatus,setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE)
-    const [messages, setMessages] = useState<SavedMessage>([]);
+    const [messages, setMessages] = useState<SavedMessage[]>([]);
     const [lastMessage, setLastMessage] = useState<string>("");
 
     useEffect(() => {
@@ -64,9 +64,10 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
     },[])
 
     useEffect(() => {
-    if (messages.length > 0) {
-      setLastMessage(messages[messages.length - 1].content);
-    }
+      if (messages.length > 0) {
+        setLastMessage(messages[messages.length - 1].content);
+      }
+    }, [messages]);
 
     const handleGenerateFeedback = async(messages:SavedMessage[])=>{
         console.log('Generate feedback here');
