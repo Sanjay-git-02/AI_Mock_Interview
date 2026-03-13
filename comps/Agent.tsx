@@ -27,6 +27,7 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
     const [isSpeaking,setIsSpeaking] = useState(false);
     const [callStatus,setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE)
     const [messages, setMessages] = useState<SavedMessage>([]);
+    const [lastMessage, setLastMessage] = useState<string>("");
 
     useEffect(() => {
         const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
@@ -35,7 +36,6 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
         const onMessage = (message:Message) =>{
             if(message.type === 'transcript' && message.transcriptType === 'final'){
                 const newMessage = {role:message.role, content:message.transcript};
-
                 setMessages((prev)=>[...prev, newMessage]);
             }
         }
@@ -63,12 +63,17 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
 
     },[])
 
+    useEffect(() => {
+    if (messages.length > 0) {
+      setLastMessage(messages[messages.length - 1].content);
+    }
+
     const handleGenerateFeedback = async(messages:SavedMessage[])=>{
         console.log('Generate feedback here');
 
         const {success,feedbackId:id} = await createFeedback({
-            userId:userId!,
             interviewId:interviewId!,
+            userId:userId!,
             transcript:messages,
             feedbackId,
         });
@@ -117,11 +122,9 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
 
     const handleDisconnect = async () => {
         setCallStatus(CallStatus.FINISHED);
-
         vapi.stop()
     }
 
-    const latestMessage  = messages[messages.length - 1]?.content;
 
     const isCallInactiveOrFinished = callStatus === CallStatus.INACTIVE || callStatus === CallStatus.FINISHED;
 
@@ -158,9 +161,9 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
             {messages.length > 0 && (
                 <div className="transcript-border">
                     <div className="transcript">
-                        <p key={latestMessage}
+                        <p key={lastMessage}
                            className={cn("transition-opacity duration-500 opacity-0", "animate-fadeIn opacity-100")}>
-                            {latestMessage}
+                            {lastMessage}
                         </p>
                     </div>
                 </div>
@@ -173,7 +176,6 @@ const Agent = ({userName,userId,type,interviewId,feedbackId,questions}: AgentPro
                         <span>
                             {isCallInactiveOrFinished ? "Call" : "Connecting..."}
                         </span>
-
                     </button>
                 ) : (
                     <button className="btn-disconnect" onClick={handleDisconnect}>
